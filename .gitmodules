@@ -1,0 +1,32 @@
+[submodule "coffee-mode"]
+    path = coffee-mode
+    url = git://github.com/defunkt/coffee-mode.git
+
+[submodule "dart-mode"]
+    path = dart-mode
+    url = git://github.com/nex3/dart-mode.git
+
+[submodule "emacs-for-python"]
+    path = emacs-for-python
+    url = https://github.com/gabrielelanaro/emacs-for-python.git
+
+[submodule "jshint-mode"]
+    path = jshint-mode
+    url = git://github.com/daleharvey/jshint-mode.git
+
+[submodule "less-css-mode"]
+    path = less-css-mode
+    url = git://github.com/purcell/less-css-mode.git
+
+[submodule "pycoverage.el"]
+    path = pycoverage.el
+    url = git://github.com/alikins/pycoverage.el.git
+
+[submodule "snippets"]
+    path = snippets
+    url = https://github.com/abourget/my.emacs.snippets
+
+[submodule "zencoding"]
+    path = zencoding
+    url = https://github.com/rooney/zencoding.git
+
