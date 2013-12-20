@@ -1,3 +1,19 @@
+;; Frame size and font color
+(defun frame2 ()
+   (interactive "")
+   (set-frame-width (selected-frame) 174) ;; 164 originally
+ )
+(defun frame80 ()
+   (interactive "")
+   (set-frame-width (selected-frame) 85) ;; 80 originally
+ )
+
+(when (display-graphic-p)
+  (invert-face 'default)
+  (frame80)
+)
+
+;;
 (setq column-number-mode t)
 
 (add-to-list 'load-path "~/.emacs.d/plugins/yasnippet-0.6.1c")
@@ -59,6 +75,8 @@
 
 
 ;; I hate tabs!
+;(setq tab-width 8)
+;(setq indent-tabs-mode t)
 (setq-default indent-tabs-mode nil)
 
 
@@ -81,15 +99,6 @@
 		    (concat "/home/" user-login-name) "~"
 		    (or buffer-file-name "%b"))))))
 
-
-(defun frame2 ()
-   (interactive "")
-   (set-frame-width (selected-frame) 174) ;; 164 originally
- )
-(defun frame80 ()
-   (interactive "")
-   (set-frame-width (selected-frame) 85) ;; 80 originally
- )
 
 ;; http://stackoverflow.com/questions/4177929/how-to-change-the-indentation-width-in-emacs-javascript-mode
 (setq js-indent-level 2)
@@ -206,3 +215,11 @@
 ;; http://marc-abramowitz.com/archives/2006/10/05/ctrl-left-and-ctrl-right-in-bash-and-emacs/
 (global-set-key "\M-[1;5C"    'forward-word)      ; Ctrl+right   => forward word
 (global-set-key "\M-[1;5D"    'backward-word)     ; Ctrl+left    => backward word
+
+;
+; Cycle through windows backwards with C-x p
+(defun prev-window ()
+  (interactive)
+  (other-window -1))
+
+(define-key global-map (kbd "C-x p") 'prev-window)
