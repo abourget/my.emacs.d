@@ -199,22 +199,15 @@
 (setq skeleton-pair nil)
 
 ;; Ledger stuff
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/ledger-mode")
+(add-to-list 'load-path "/home/abourget/build/ledger/lisp")
 (require 'ledger-mode)
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
 (set-variable 'ledger-highlight-xact-under-point 'nil)
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(ledger-reports (quote (("bal" "ledger -f %(ledger-file) bal") ("reg" "ledger -f %(ledger-file) reg") ("payee" "ledger -f %(ledger-file) reg -- %(payee)") ("account" "ledger -f %(ledger-file) reg %(account)") ("epargne" "ledger -f main.ledger bal assets:savings")))))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- )
+'(ledger-reports (quote (("bal" "ledger -f %(ledger-file) bal") ("reg" "ledger -f %(ledger-file) reg") ("payee" "ledger -f %(ledger-file) reg -- %(payee)") ("account" "ledger -f %(ledger-file) reg %(account)") ("epargne" "ledger -f main.ledger bal assets:savings")))))
 
 
 ;; Tweaks for tmux's support for Ctrl+arrows
@@ -271,3 +264,17 @@
   ;; put the point in the lowest line and return
   (next-line arg))
 (global-set-key (kbd "C-d") 'duplicate-line)
+
+
+
+;; SCSS support
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/scss-mode"))
+(autoload 'scss-mode "scss-mode")
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+(add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
+(set-variable 'scss-compile-at-save 'nil)
+
+;; YAML mode
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/yaml-mode"))
+(autoload 'yaml-mode "yaml-mode")
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
