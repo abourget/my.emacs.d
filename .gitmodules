@@ -2,6 +2,14 @@
     path = coffee-mode
     url = git://github.com/defunkt/coffee-mode.git
 
+[submodule "scss-mode"]
+    path = scss-mode
+    url = https://github.com/antonj/scss-mode.git
+
+[submodule "yaml-mode"]
+    path = yaml-mode
+    url = https://github.com/yoshiki/yaml-mode.git
+
 [submodule "dart-mode"]
     path = dart-mode
     url = git://github.com/nex3/dart-mode.git
@@ -29,4 +37,3 @@
 [submodule "zencoding"]
     path = zencoding
     url = https://github.com/rooney/zencoding.git
-
