@@ -223,8 +223,6 @@
 
 (define-key global-map (kbd "C-x p") 'prev-window)
 
-(define-key global-map (kbd "C-F") 'rgrep)
-
 ;
 ; Duplicate current line when indenting comments
 ;  From: http://stackoverflow.com/questions/88399/how-do-i-duplicate-a-whole-line-in-emacs/88440
@@ -266,6 +264,14 @@
 (global-set-key (kbd "C-d") 'duplicate-line)
 
 
+;; ack-and-a-half search
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/ack-and-a-half"))
+(require 'ack-and-a-half)
+(define-key global-map (kbd "C-F") 'ack-and-a-half)
+; remember M-g (M-)n and M-g (M-)p for previous and next errors. which skips
+; from one ack-outputted filename to the next.. highlighting, etc.. awesome!
+
+
 
 ;; SCSS support
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/scss-mode"))
@@ -278,3 +284,23 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/yaml-mode"))
 (autoload 'yaml-mode "yaml-mode")
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+
+;; Fixup accents, as per: https://bugs.launchpad.net/emacs-snapshot/+bug/1251176
+(require 'iso-transl)
+
+
+;; Add go-mode.el
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/go-mode"))
+(require 'go-mode-load)
+;; From: http://dominik.honnef.co/posts/2013/03/writing_go_in_emacs/
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "M-.") 'godef-jump)))
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "C-c C-f") 'gofmt)))
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
+(add-hook 'go-mode-hook (lambda ()
+                          (setq tab-width 4)))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/go-autocomplete"))
+(require 'go-autocomplete)
+(require 'auto-complete-config)
