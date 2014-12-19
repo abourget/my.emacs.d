@@ -1,3 +1,14 @@
+;;
+(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+
+
+;; Bookmarks remapping
+(define-key global-map (kbd "C-x r j") 'bookmark-jump)
+(define-key global-map (kbd "M-g m") 'bookmark-set)
+(define-key global-map (kbd "M-g j") 'bookmark-jump)
+(define-key global-map (kbd "M-g l") 'bookmark-bmenu-list)
+
+
 ;; Frame size and font color
 (defun frame2 ()
    (interactive "")
@@ -30,47 +41,51 @@
 ;(add-to-list 'load-path "/usr/share/emacs/23.1/site-lisp/geben") ; Geben directory
 ;(require 'geben)
 
+;  buffer-mode from http://www.emacswiki.org/cgi-bin/wiki/buffer-move.el
+(require 'buffer-move)
 
-;;----------- html5-el mode from https://github.com/hober/html5-el
-;;
-;(add-to-list 'load-path "~/.emacs.d/html5-el/")
-;(eval-after-load "rng-loc"
-;  '(add-to-list 'rng-schema-locating-files "~/.emacs.d/html5-el/schemas.xml"))
-;(require 'whattf-dt)
 
 
 ;;--------- .emacs -----------
 ;; adds ~/.elisp/lyqi in the load path
-(setq load-path (cons (expand-file-name "~/.emacs.d/lyqi") load-path))
+;(setq load-path (cons (expand-file-name "~/.emacs.d/lyqi") load-path))
 
 ;; when loading LilyPond-mode, lyqi-mode library will also be loaded.
 ;; type `C-c q' in LilyPond-mode to switch to lyqi-mode.
-(eval-after-load "lilypond-mode"
-  '(progn
-     (load-library "lyqi-mode")
-     (define-key LilyPond-mode-map "\C-cq" 'lyqi-mode)))
+;(eval-after-load "lilypond-mode"
+;  '(progn
+;     (load-library "lyqi-mode")
+;     (define-key LilyPond-mode-map "\C-cq" 'lyqi-mode)))
 
 
-;; PHP modes
-
-;(add-to-list 'load-path "~/.emacs.d") ; Geben directory
-;(load "~/.emacs.d/nxhtml/autostart.el")
 ;(autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
-(add-to-list 'auto-mode-alist '("\\.module$" . php-mode))
-(add-to-list 'auto-mode-alist '("\\.mako$" . mako-html-mumamo-mode))
+;(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+;(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
+;(add-to-list 'auto-mode-alist '("\\.module$" . php-mode))
+;(add-to-list 'auto-mode-alist '("\\.mako$" . mako-html-mumamo-mode))
 ;(add-to-list 'auto-mode-alist '("\\.html$" . mako-html-mumamo-mode))
 
+(load "~/.emacs.d/web-mode/web-mode.el")
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+
 ;;  Bind "Ctrl+C é" to sgml-close-tag
-(add-hook 'html-mode-hook
+(add-hook 'web-mode-hook
  (lambda ()
   (local-set-key (kbd "C-c é") 'sgml-close-tag)
  )
 )
 
+
 ;; Load less-css-mode
-(load-file "~/.emacs.d/less-css-mode/less-css-mode.el")
+;(load-file "~/.emacs.d/less-css-mode/less-css-mode.el")
 
 
 
@@ -83,9 +98,10 @@
 ;; Don't open a new window for debugging Emacs stuff..
 (setq debug-on-error nil)
 
-;; When doing a presentation:
+;; WHEN DOING PRESENTATIONS:
 ;;(set-face-attribute 'default nil :height 150)
-
+;;(invert-face 'default)
+;; END PRESENTATIONS
 
 
 ;; To allow time tracking
@@ -101,28 +117,26 @@
 
 
 ;; http://stackoverflow.com/questions/4177929/how-to-change-the-indentation-width-in-emacs-javascript-mode
-(setq js-indent-level 2)
+;(setq js-indent-level 2)
 
 ;; Of my own discovery!
-(setq css-indent-offset 2)
+;(setq css-indent-offset 2)
 
 
-
+;; PowerShell stuff
+(autoload 'powershell "powershell" "Start an interactive shell of Powershell." t)
+(add-to-list 'auto-mode-alist '("\\.ps1\\'" . powershell-mode)) ; PowerShell script
 
 
 ;; Load Zencoding, from https://github.com/rooney/zencoding
-(add-to-list 'load-path "~/.emacs.d/zencoding")
-(require 'zencoding-mode)
-(add-hook 'sgml-mode-hook 'zencoding-mode) ;; Auto start on any markup modes
-(setq-default zencoding-indentation 2)
+;(add-to-list 'load-path "~/.emacs.d/zencoding")
+;(require 'zencoding-mode)
+;(add-hook 'sgml-mode-hook 'zencoding-mode) ;; Auto start on any markup modes
+;(setq-default zencoding-indentation 2)
 
 ;; Load desktop menu
 (load "~/.emacs.d/desktop-menu.el")
 (require 'desktop-menu)
-
-;; Load dart-mode stuff
-(autoload 'dart-mode "dart-mode" "Edit Dart code." t)
-(add-to-list 'auto-mode-alist '("\\.dart$" . dart-mode))
 
 ;; Ctrl+PageUp and Down, to move inside
 (put 'scroll-left 'disabled nil)
@@ -136,14 +150,28 @@
 (add-hook 'javascript-mode-hook
     (lambda () (flymake-mode t)))
 
+;; Hide/Show mode
+(add-hook 'js-mode-hook
+ (lambda ()
+   (local-set-key (kbd "C-c <right>") 'hs-show-block)
+   (local-set-key (kbd "C-c <left>") 'hs-hide-block)
+   (local-set-key (kbd "C-c <up>") 'hs-hide-all)
+   (local-set-key (kbd "C-c <down>") 'hs-show-all)
+   (local-set-key (kbd "C-c <") 'hs-toggle-hiding)
+   (hs-minor-mode t)
+   )
+ )
 
+;; Load dart-mode stuff
+;(autoload 'dart-mode "dart-mode" "Edit Dart code." t)
+;(add-to-list 'auto-mode-alist '("\\.dart$" . dart-mode))
 ; Dart mode
-(add-to-list 'load-path "~/.emacs.d/dart-mode")
-(require 'dart-mode)
-(add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
+;(add-to-list 'load-path "~/.emacs.d/dart-mode")
+;(require 'dart-mode)
+;(add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
 
 
-(load-file "~/.emacs.d/pycoverage.el/pycov2.el")
+;(load-file "~/.emacs.d/pycoverage.el/pycov2.el")
 ;(require 'linum)
 ;(require 'pycov2)
 ;(add-hook 'python-mode-hook
@@ -156,12 +184,11 @@
 ; Coffee stuff, from: https://github.com/jonathanchu/emacs/tree/master/vendor/coffee-mode
 ;
 ; watch out.. does this affect the whole world ?
-(setq coffee-tab-width 2)
-(add-to-list 'load-path "~/.emacs.d/coffee-mode")
-(require 'coffee-mode)
-
-(add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
-(add-to-list 'auto-mode-alist '("Cakefile" . coffee-mode))
+;(setq coffee-tab-width 2)
+;(add-to-list 'load-path "~/.emacs.d/coffee-mode")
+;(require 'coffee-mode)
+;(add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
+;(add-to-list 'auto-mode-alist '("Cakefile" . coffee-mode))
 
 
 ;;
@@ -204,10 +231,12 @@
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
 (set-variable 'ledger-highlight-xact-under-point 'nil)
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-'(ledger-reports (quote (("bal" "ledger -f %(ledger-file) bal") ("reg" "ledger -f %(ledger-file) reg") ("payee" "ledger -f %(ledger-file) reg -- %(payee)") ("account" "ledger -f %(ledger-file) reg %(account)") ("epargne" "ledger -f main.ledger bal assets:savings")))))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ledger-reports (quote (("bal" "ledger -f %(ledger-file) bal") ("reg" "ledger -f %(ledger-file) reg") ("payee" "ledger -f %(ledger-file) reg -- %(payee)") ("account" "ledger -f %(ledger-file) reg %(account)") ("epargne" "ledger -f main.ledger bal assets:savings"))))
+ '(safe-local-variable-values (quote ((sgml-basic-offset . 4)))))
 
 
 ;; Tweaks for tmux's support for Ctrl+arrows
@@ -270,15 +299,17 @@
 (define-key global-map (kbd "C-F") 'ack-and-a-half)
 ; remember M-g (M-)n and M-g (M-)p for previous and next errors. which skips
 ; from one ack-outputted filename to the next.. highlighting, etc.. awesome!
+; This is to keep an Ack window open, to do Nested searches.
+;(define-key global-map (kbd "C-x r") 'rename-uniquely)
 
 
 
 ;; SCSS support
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/scss-mode"))
-(autoload 'scss-mode "scss-mode")
-(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
-(add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
-(set-variable 'scss-compile-at-save 'nil)
+;(add-to-list 'load-path (expand-file-name "~/.emacs.d/scss-mode"))
+;(autoload 'scss-mode "scss-mode")
+;(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+;(add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
+;(set-variable 'scss-compile-at-save 'nil)
 
 ;; YAML mode
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/yaml-mode"))
@@ -290,17 +321,58 @@
 
 
 ;; Add go-mode.el
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/go-mode"))
+(add-to-list 'load-path "/usr/local/go/misc/emacs" t)
 (require 'go-mode-load)
 ;; From: http://dominik.honnef.co/posts/2013/03/writing_go_in_emacs/
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "M-.") 'godef-jump)))
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "C-c C-j") 'godef-jump-other-window)))
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "C-c C-f") 'gofmt)))
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
 (add-hook 'go-mode-hook (lambda ()
                           (setq tab-width 4)))
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "C-c C-c") 'compile)))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/go-autocomplete"))
 (require 'go-autocomplete)
 (require 'auto-complete-config)
+(load "/home/abourget/go/src/golang.org/x/tools/cmd/oracle/oracle.el")
+
+
+(add-to-list 'load-path (expand-file-name "~/go/src/github.com/dougm/goflymake"))
+(require 'go-flymake)
+;;(require 'go-flycheck)
+
+;;(require 'package)
+;;(add-to-list 'package-archives
+;;  '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+
+
+;; Load Magit
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/git-modes"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/magit"))
+(eval-after-load 'info
+  '(progn (info-initialize)
+          (add-to-list 'Info-directory-list (expand-file-name "~/.emacs.d/magit"))))
+(require 'magit)
+(define-key global-map (kbd "C-x g") 'magit-status)
+
+
+;; Easier comment/uncomment. I never compose mails with Emacs
+(define-key global-map (kbd "C-x m") 'comment-or-uncomment-region)
+
+
+;; Floobits
+;(load "~/.emacs.d/floobits/floobits.el")
