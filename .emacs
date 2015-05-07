@@ -3,7 +3,7 @@
 
 
 ;; Bookmarks remapping
-(define-key global-map (kbd "C-x r j") 'bookmark-jump)
+;;(define-key global-map (kbd "C-x r j") 'jump-to-register)  this is the default
 (define-key global-map (kbd "M-g m") 'bookmark-set)
 (define-key global-map (kbd "M-g j") 'bookmark-jump)
 (define-key global-map (kbd "M-g l") 'bookmark-bmenu-list)
@@ -24,6 +24,9 @@
   (frame80)
 )
 
+;; Take out the toolbar
+(tool-bar-mode -1)
+
 ;;
 (setq column-number-mode t)
 
@@ -43,6 +46,8 @@
 
 ;  buffer-mode from http://www.emacswiki.org/cgi-bin/wiki/buffer-move.el
 (require 'buffer-move)
+(require 'windmove)
+(windmove-default-keybindings 'meta)
 
 
 
@@ -76,10 +81,12 @@
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 
-;;  Bind "Ctrl+C é" to sgml-close-tag
+(setq-default web-mode-enable-auto-quoting nil)
+
+;;  Helper to close tags
 (add-hook 'web-mode-hook
  (lambda ()
-  (local-set-key (kbd "C-c é") 'sgml-close-tag)
+  (local-set-key (kbd "C-c é") 'web-mode-element-close)
  )
 )
 
@@ -104,13 +111,15 @@
 ;; END PRESENTATIONS
 
 
+(defcustom mytitle "abourget" "My own titlebar tag")
 ;; To allow time tracking
+(setq mytitle "bob")
 ;;
 (add-hook 'window-configuration-change-hook
 	  (lambda ()
 	    (setq frame-title-format
 		  (concat
-		   invocation-name "@" system-name ": "
+		   mytitle "@" system-name ": "
 		   (replace-regexp-in-string
 		    (concat "/home/" user-login-name) "~"
 		    (or buffer-file-name "%b"))))))
@@ -236,7 +245,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ledger-reports (quote (("bal" "ledger -f %(ledger-file) bal") ("reg" "ledger -f %(ledger-file) reg") ("payee" "ledger -f %(ledger-file) reg -- %(payee)") ("account" "ledger -f %(ledger-file) reg %(account)") ("epargne" "ledger -f main.ledger bal assets:savings"))))
- '(safe-local-variable-values (quote ((sgml-basic-offset . 4)))))
+ '(safe-local-variable-values (quote ((web-mode-code-indent-offset . 2) (web-mode-css-indent-offset . 2) (web-mode-markup-indent-offset . 2) (web-mode-indent-style . 2) (web-mode-script-padding . 0) (web-mode-style-padding . 0) (sgml-basic-offset . 4)))))
 
 
 ;; Tweaks for tmux's support for Ctrl+arrows
@@ -320,9 +329,9 @@
 (require 'iso-transl)
 
 
-;; Add go-mode.el
-(add-to-list 'load-path "/usr/local/go/misc/emacs" t)
-(require 'go-mode-load)
+(add-to-list 'load-path "~/.emacs.d/go-mode.el/" t)
+(require 'go-mode-autoloads)
+(load "/home/abourget/go/src/golang.org/x/tools/cmd/oracle/oracle.el")
 ;; From: http://dominik.honnef.co/posts/2013/03/writing_go_in_emacs/
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "M-.") 'godef-jump)))
@@ -336,15 +345,15 @@
                           (setq tab-width 4)))
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "C-c C-c") 'compile)))
+(add-hook 'go-mode-hook 'go-eldoc-setup)
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/go-autocomplete"))
 (require 'go-autocomplete)
 (require 'auto-complete-config)
-(load "/home/abourget/go/src/golang.org/x/tools/cmd/oracle/oracle.el")
 
+(load "/home/abourget/go/src/golang.org/x/tools/refactor/rename/rename.el")
 
 (add-to-list 'load-path (expand-file-name "~/go/src/github.com/dougm/goflymake"))
 (require 'go-flymake)
-;;(require 'go-flycheck)
 
 ;;(require 'package)
 ;;(add-to-list 'package-archives
@@ -359,6 +368,10 @@
  )
 
 
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/markdown-mode"))
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
 ;; Load Magit
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/git-modes"))
@@ -373,6 +386,6 @@
 ;; Easier comment/uncomment. I never compose mails with Emacs
 (define-key global-map (kbd "C-x m") 'comment-or-uncomment-region)
 
-
-;; Floobits
-;(load "~/.emacs.d/floobits/floobits.el")
+;; Disabled narrow-to-region, see http://www.gnu.org/software/emacs/manual/html_node/emacs/Narrowing.html
+;; It's just weird..
+(put 'narrow-to-region 'disabled nil)
