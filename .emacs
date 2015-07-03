@@ -1,6 +1,12 @@
-;;
+;;; package -- My own .emacs file - @bourgetalexndre
 (add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 
+
+;; From: http://stable.melpa.org/#/getting-started
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://stable.melpa.org/packages/"))
+(package-initialize) ;; You might already have this line
 
 ;; Bookmarks remapping
 ;;(define-key global-map (kbd "C-x r j") 'jump-to-register)  this is the default
@@ -87,6 +93,7 @@
 (add-hook 'web-mode-hook
  (lambda ()
   (local-set-key (kbd "C-c é") 'web-mode-element-close)
+  (local-set-key (kbd "C-c C-l") 'font-lock-fontify-buffer)
  )
 )
 
@@ -153,11 +160,11 @@
 ;; Takeout tailing whitespaces upon save
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-; From: https://github.com/daleharvey/jshint-mode
-(add-to-list 'load-path "~/.emacs.d/jshint-mode")
-(require 'flymake-jshint)
-(add-hook 'javascript-mode-hook
-    (lambda () (flymake-mode t)))
+;;
+;; NOTE: FLYCHECK was INSTALLED WITH "package-install" "flycheck"
+;;
+;; Enable FlyCheck throughout
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; Hide/Show mode
 (add-hook 'js-mode-hook
@@ -168,8 +175,9 @@
    (local-set-key (kbd "C-c <down>") 'hs-show-all)
    (local-set-key (kbd "C-c <") 'hs-toggle-hiding)
    (hs-minor-mode t)
-   )
+   (flycheck-select-checker 'javascript-jshint)
  )
+)
 
 ;; Load dart-mode stuff
 ;(autoload 'dart-mode "dart-mode" "Edit Dart code." t)
@@ -221,11 +229,6 @@
 ;; Define f10 to previous error
 ;; Define f11 to next error
 (require 'epy-bindings) ;; For my suggested keybindings [optional]
-
-;; Some shortcut that do not collide with gnome-terminal,
-;; otherwise, "epy-bindings" define f10 and f11 for them.
-(global-set-key [f2] 'flymake-goto-prev-error)
-(global-set-key [f3] 'flymake-goto-next-error)
 
 ;; Next two lines are the checks to do. You can add more if you wish.
 ;(epy-setup-checker "pyflakes %f") ;; For python syntax check
@@ -352,14 +355,6 @@
 
 (load "/home/abourget/go/src/golang.org/x/tools/refactor/rename/rename.el")
 
-(add-to-list 'load-path (expand-file-name "~/go/src/github.com/dougm/goflymake"))
-(require 'go-flymake)
-
-;;(require 'package)
-;;(add-to-list 'package-archives
-;;  '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
-
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -372,6 +367,13 @@
 (autoload 'markdown-mode "markdown-mode"
    "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-hook 'markdown-mode-hook
+ (lambda ()
+  (local-set-key (kbd "M-<left>") 'windmove-left)
+  (local-set-key (kbd "M-<right>") 'windmove-right)
+ )
+)
+
 
 ;; Load Magit
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/git-modes"))
@@ -389,3 +391,6 @@
 ;; Disabled narrow-to-region, see http://www.gnu.org/software/emacs/manual/html_node/emacs/Narrowing.html
 ;; It's just weird..
 (put 'narrow-to-region 'disabled nil)
+
+(provide '.emacs)
+;;; .emacs ends here
