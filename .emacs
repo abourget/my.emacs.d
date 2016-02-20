@@ -164,7 +164,12 @@
 ;; NOTE: FLYCHECK was INSTALLED WITH "package-install" "flycheck"
 ;;
 ;; Enable FlyCheck throughout
-(add-hook 'after-init-hook #'global-flycheck-mode)
+(add-hook 'after-init-hook (lambda()
+  (global-flycheck-mode)
+  (global-set-key (kbd "M-g M-l") 'flycheck-list-errors)
+  (global-set-key (kbd "M-g l") 'flycheck-list-errors)
+))
+
 
 ;; Hide/Show mode
 (add-hook 'js-mode-hook
@@ -229,6 +234,22 @@
 ;; Define f10 to previous error
 ;; Define f11 to next error
 (require 'epy-bindings) ;; For my suggested keybindings [optional]
+
+;; Use Jedi for python jumping around
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+(add-hook 'python-mode-hook
+          (lambda ()
+            (local-set-key (kbd "M-.") 'jedi:goto-definition)))
+(add-hook 'python-mode-hook
+  (lambda ()
+    (local-set-key (kbd "C-c C-j")
+      (lambda()
+        (jedi:goto-definition 1)
+      )
+    )
+  )
+)
 
 ;; Next two lines are the checks to do. You can add more if you wish.
 ;(epy-setup-checker "pyflakes %f") ;; For python syntax check
@@ -332,6 +353,22 @@
 (require 'iso-transl)
 
 
+;; Quick rename! http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
+(defun rename-file-and-buffer ()
+  "Rename the current buffer and file it is visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (message "Buffer is not visiting a file!")
+      (let ((new-name (read-file-name "New name: " filename)))
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (set-visited-file-name new-name t t)))))))
+(global-set-key (kbd "C-c r")  'rename-file-and-buffer)
+
+
 (add-to-list 'load-path "~/.emacs.d/go-mode.el/" t)
 (require 'go-mode-autoloads)
 (load "/home/abourget/go/src/golang.org/x/tools/cmd/oracle/oracle.el")
@@ -349,11 +386,13 @@
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "C-c C-c") 'compile)))
 (add-hook 'go-mode-hook 'go-eldoc-setup)
+;;(add-hook 'before-save-hook #'gofmt-before-save)
+;;(remove-hook 'before-save-hook #'gofmt-before-save)
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/go-autocomplete"))
 (require 'go-autocomplete)
 (require 'auto-complete-config)
 
-(load "/home/abourget/go/src/golang.org/x/tools/refactor/rename/rename.el")
+(load "/home/abourget/go/src/golang.org/x/tools/refactor/rename/go-rename.el")
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -394,3 +433,23 @@
 
 (provide '.emacs)
 ;;; .emacs ends here
+
+
+;; Multiple cursors https://github.com/emacsmirror/multiple-cursors
+;; http://emacsrocks.com/e13.html
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+
+(require 'region-bindings-mode)
+(region-bindings-mode-enable)
+
+(define-key region-bindings-mode-map "a" 'mc/mark-all-like-this)
+(define-key region-bindings-mode-map "p" 'mc/mark-previous-like-this)
+(define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
+(define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended)
+(define-key region-bindings-mode-map "l" 'mc/edit-lines)
+
+;; Expand region, see https://github.com/magnars/expand-region.el
+;; http://emacsrocks.com/e09.html
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
