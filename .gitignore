@@ -10,3 +10,5 @@ bookmarks
 /session.*
 /eshell/
 /tramp
+
+.mc-lists.el
