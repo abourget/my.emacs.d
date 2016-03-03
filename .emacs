@@ -1,4 +1,5 @@
 ;;; package -- My own .emacs file - @bourgetalexndre
+
 (add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 
 
@@ -368,10 +369,13 @@
           (set-visited-file-name new-name t t)))))))
 (global-set-key (kbd "C-c r")  'rename-file-and-buffer)
 
+(load "/home/abourget/go/src/golang.org/x/tools/cmd/guru/go-guru.el")
 
-(add-to-list 'load-path "~/.emacs.d/go-mode.el/" t)
+(add-to-list 'load-path "~/.emacs.d/go-mode.el")
+
+(require 'go-mode)
+
 (require 'go-mode-autoloads)
-(load "/home/abourget/go/src/golang.org/x/tools/cmd/oracle/oracle.el")
 ;; From: http://dominik.honnef.co/posts/2013/03/writing_go_in_emacs/
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "M-.") 'godef-jump)))
