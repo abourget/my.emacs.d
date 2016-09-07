@@ -1,6 +1,6 @@
 ;;; package -- My own .emacs file - @bourgetalexndre
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 
 
 ;; From: http://stable.melpa.org/#/getting-started
@@ -114,8 +114,10 @@
 (setq debug-on-error nil)
 
 ;; WHEN DOING PRESENTATIONS:
-;;(set-face-attribute 'default nil :height 150)
-;;(invert-face 'default)
+;; (set-face-attribute 'default nil :height 220)  ;; At 1080
+;; (set-face-attribute 'default nil :height 150)  ;; 1024x768
+;; (set-face-attribute 'default nil :height 120)  ;; Standard
+;; (invert-face 'default)
 ;; END PRESENTATIONS
 
 
@@ -152,7 +154,7 @@
 ;(setq-default zencoding-indentation 2)
 
 ;; Load desktop menu
-(load "~/.emacs.d/desktop-menu.el")
+(load "~/.emacs.d/lisp/desktop-menu.el")
 (require 'desktop-menu)
 
 ;; Ctrl+PageUp and Down, to move inside
@@ -194,7 +196,7 @@
 ;(add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
 
 
-;(load-file "~/.emacs.d/pycoverage.el/pycov2.el")
+;(load-file "~/.emacs.d/lisp/pycoverage.el/pycov2.el")
 ;(require 'linum)
 ;(require 'pycov2)
 ;(add-hook 'python-mode-hook
@@ -331,6 +333,10 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/ack-and-a-half"))
 (require 'ack-and-a-half)
 (define-key global-map (kbd "C-F") 'ack-and-a-half)
+
+;; use `sift` for now, installed with `package-install sift`
+;; (define-key global-map (kbd "C-f") 'sift-regexp)
+
 ; remember M-g (M-)n and M-g (M-)p for previous and next errors. which skips
 ; from one ack-outputted filename to the next.. highlighting, etc.. awesome!
 ; This is to keep an Ack window open, to do Nested searches.
@@ -371,7 +377,7 @@
 
 (load "/home/abourget/go/src/golang.org/x/tools/cmd/guru/go-guru.el")
 
-(add-to-list 'load-path "~/.emacs.d/go-mode.el")
+(add-to-list 'load-path "~/.emacs.d/lisp/go-mode.el")
 
 (require 'go-mode)
 
@@ -390,11 +396,14 @@
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "C-c C-c") 'compile)))
 (add-hook 'go-mode-hook 'go-eldoc-setup)
+(setq gofmt-command "goimports")
 ;;(add-hook 'before-save-hook #'gofmt-before-save)
 ;;(remove-hook 'before-save-hook #'gofmt-before-save)
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/go-autocomplete"))
 (require 'go-autocomplete)
 (require 'auto-complete-config)
+
+(add-hook go-mode-hook #'rats-mode)
 
 (load "/home/abourget/go/src/golang.org/x/tools/refactor/rename/go-rename.el")
 
@@ -457,3 +466,10 @@
 ;; http://emacsrocks.com/e09.html
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+;; http://emacsredux.com/blog/2013/05/09/keep-backup-and-auto-save-files-out-of-the-way/
+;; store all backup and autosave files in the tmp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
